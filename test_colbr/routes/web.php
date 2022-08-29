@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InscriptionController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ConnexionController;
+use App\Http\Controllers\CompteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,37 +21,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/inscription', function() {
-    return view('inscription');
-});
+Route::get('/inscription', [InscriptionController::class, 'formulaire']);
+Route::post('inscription', [InscriptionController::class, 'traitement']);
 
-Route::post('inscription', function() {
-    request()->validate([
-        'first_name' => ['required'],
-        'last_name' => ['required'],
-        'email' => ['required', 'email'],
-        'password' => ['required', 'confirmed', 'min:8'],
-        'password_confirmation' => ['required'],
-    ], [
-        'password.min' => 'For security reasons, your password must contain at least :min characters.'
-    ]);
+Route::get('/connexion', [ConnexionController::class, 'formulaire']);
+Route::post('/connexion', [ConnexionController::class, 'traitement']);
 
-    $user = App\Models\User::create([
-        'first_name' => request('first_name'),
-        'last_name' => request('last_name'),
-        'email' => request('email'),
-        'password' => bcrypt(request('password')),
-        'password_confirmation' => request('password_confirmation'),
-    ]);
+Route::get('/users', [UsersController::class, 'liste']);
 
-    return 'Nous avons bien recu votre email qui est ' . request('email');
-});
-
-Route::get('/users', function() {
-    $users = App\Models\User::all();
-
-    return view('users', [
-        'users' => $users
-    ]);
-});
-
+Route::get('/mon-compte', [CompteController::class, 'accueil']);
+Route::get('/deconnexion', [CompteController::class, 'deconnexion']);
