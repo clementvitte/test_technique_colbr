@@ -29,7 +29,7 @@ class InscriptionController extends Controller
             'last_name' => request('last_name'),
             'email' => request('email'),
             'password' => bcrypt(request('password')),
-            'password_confirmation' => request('password_confirmation'),
+            'password_confirmation' => bcrypt(request('password_confirmation')),
         ]);
 
         return 'Nous avons bien recu votre email qui est ' . request('email');
